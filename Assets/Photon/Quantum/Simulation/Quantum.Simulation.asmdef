@@ -1,0 +1,49 @@
+{
+    "name": "Quantum.Simulation",
+    "rootNamespace": "Quantum",
+    "references": [
+        "GUID:602db348b41dd734e92f51a094ce7d4e",
+        "GUID:ee45880323cc476bb755219ccb2dc319",
+        "GUID:dcb993bd85006924cb2bcdc63180c783",
+        "GUID:2a81c6962524d424a8ef5072bd3b0fa0",
+        "GUID:e53fb83a26b948d489b782439ada8306",
+        "GUID:046fe2e81cc8db04ca53f063301172b9",
+        "GUID:e88331a9781cae6479e282d003e69b86"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Quantum.Engine.dll",
+        "Quantum.Log.dll",
+        "Quantum.BotSDK.Core.dll",
+        "Sirenix.Serialization.dll",
+        "Sirenix.OdinInspector.Attributes.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "2021",
+            "define": "QUANTUM_UNITY"
+        },
+        {
+            "name": "com.unity.modules.physics",
+            "expression": "1.0",
+            "define": "QUANTUM_ENABLE_PHYSICS3D"
+        },
+        {
+            "name": "com.unity.modules.physics2d",
+            "expression": "1.0",
+            "define": "QUANTUM_ENABLE_PHYSICS2D"
+        },
+        {
+            "name": "Unity",
+            "expression": "2021",
+            "define": "QUANTUM_UNITY_SIMULATION"
+        }
+    ],
+    "noEngineReferences": false
+}

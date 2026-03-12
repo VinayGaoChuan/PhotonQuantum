@@ -1,0 +1,16 @@
+{
+    "name": "Photon.Realtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e8f56ee454bbbcd44913af9fd46a41f0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,33 @@
+{
+    "name": "Quantum.Unity.Editor.CodeGen",
+    "rootNamespace": "Quantum.Editor",
+    "references": [
+        "GUID:e53fb83a26b948d489b782439ada8306",
+        "GUID:046fe2e81cc8db04ca53f063301172b9",
+        "GUID:e88331a9781cae6479e282d003e69b86"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Quantum.Engine.dll",
+        "Quantum.CodeGen.Qtn.dll",
+        "Quantum.CodeGen.Unity.dll",
+        "FSharp.Core.dll",
+        "System.CodeDom.dll",
+        "Quantum.Log.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.photonengine.quantum",
+            "expression": "1.0",
+            "define": "QUANTUM_UPM"
+        }
+    ],
+    "noEngineReferences": false
+}

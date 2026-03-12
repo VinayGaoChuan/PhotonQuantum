@@ -1,0 +1,1126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1722638350, guid: b156eeaae3f741b40af66649a4748430, type: 3}
+  m_Name: Map001_Map
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: _Resources/Prefab/Map/Map001/Map001_Map
+    Guid:
+      Value: 473738818239699993
+  UserAsset:
+    Id:
+      Value: 381337189407407452
+  Scene: 
+  ScenePath: 
+  SceneGuid: 
+  WorldSize: 51
+  BucketsCount: 16
+  BucketsSubdivisions: 8
+  BucketingAxis: 0
+  SortingAxis: 1
+  SceneMeshCellSize:
+    RawValue: 262144
+  TriangleMeshCellSize: -1
+  StaticColliders3DTrianglesData:
+    Id:
+      Value: 430960497278476382
+  SerializeTrianglesMetadata: 0
+  GridSizeX: 23
+  GridSizeY: 25
+  GridNodeSize: 2
+  NavMeshLinks:
+  - Id:
+      Value: 315809039913774620
+  Regions:
+  - MainArea
+  StaticColliders2D:
+  - Rotation:
+      RawValue: 206267
+    Position:
+      X:
+        RawValue: 1276200
+      Y:
+        RawValue: 1679877
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 300979
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: RightStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 0
+      MutableMode: 0
+  - Rotation:
+      RawValue: 361308
+    Position:
+      X:
+        RawValue: 1178813
+      Y:
+        RawValue: 1480698
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 283597
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: RightStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 1
+      MutableMode: 0
+  - Rotation:
+      RawValue: 315332
+    Position:
+      X:
+        RawValue: 1400935
+      Y:
+        RawValue: 1097033
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 187153
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: RightStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 2
+      MutableMode: 0
+  - Rotation:
+      RawValue: 331347
+    Position:
+      X:
+        RawValue: 1497691
+      Y:
+        RawValue: 692160
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 232210
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: RightStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 3
+      MutableMode: 0
+  - Rotation:
+      RawValue: 102875
+    Position:
+      X:
+        RawValue: 1576543
+      Y:
+        RawValue: 1077572
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 604052
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: RightStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 4
+      MutableMode: 0
+  - Rotation:
+      RawValue: 0
+    Position:
+      X:
+        RawValue: -1349568
+      Y:
+        RawValue: 1678395
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 535197
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: LeftStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 5
+      MutableMode: 0
+  - Rotation:
+      RawValue: 309537
+    Position:
+      X:
+        RawValue: -1877632
+      Y:
+        RawValue: 1016106
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 662061
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: LeftStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 6
+      MutableMode: 0
+  - Rotation:
+      RawValue: 407652
+    Position:
+      X:
+        RawValue: -1719926
+      Y:
+        RawValue: 344598
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 150870
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: LeftStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 7
+      MutableMode: 0
+  - Rotation:
+      RawValue: 77812
+    Position:
+      X:
+        RawValue: -1479210
+      Y:
+        RawValue: 558546
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 240931
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: LeftStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 8
+      MutableMode: 0
+  - Rotation:
+      RawValue: 120087
+    Position:
+      X:
+        RawValue: -1452599
+      Y:
+        RawValue: 1019280
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 245659
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: LeftStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 9
+      MutableMode: 0
+  - Rotation:
+      RawValue: 35487
+    Position:
+      X:
+        RawValue: -1165252
+      Y:
+        RawValue: 1467621
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 409457
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: LeftStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 10
+      MutableMode: 0
+  - Rotation:
+      RawValue: 216545
+    Position:
+      X:
+        RawValue: 965788
+      Y:
+        RawValue: -1516181
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 102455
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 11
+      MutableMode: 0
+  - Rotation:
+      RawValue: 191071
+    Position:
+      X:
+        RawValue: 672036
+      Y:
+        RawValue: -1488460
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 197678
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 12
+      MutableMode: 0
+  - Rotation:
+      RawValue: 0
+    Position:
+      X:
+        RawValue: 159626
+      Y:
+        RawValue: -1444235
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 319762
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 13
+      MutableMode: 0
+  - Rotation:
+      RawValue: 226982
+    Position:
+      X:
+        RawValue: -384168
+      Y:
+        RawValue: -1519030
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 236161
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 14
+      MutableMode: 0
+  - Rotation:
+      RawValue: 188212
+    Position:
+      X:
+        RawValue: -850614
+      Y:
+        RawValue: -1526730
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 251504
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 15
+      MutableMode: 0
+  - Rotation:
+      RawValue: 206327
+    Position:
+      X:
+        RawValue: -1362813
+      Y:
+        RawValue: -1461533
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 269792
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 16
+      MutableMode: 0
+  - Rotation:
+      RawValue: 307323
+    Position:
+      X:
+        RawValue: -1638549
+      Y:
+        RawValue: -1721930
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 258652
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 17
+      MutableMode: 0
+  - Rotation:
+      RawValue: 410762
+    Position:
+      X:
+        RawValue: -19409
+      Y:
+        RawValue: -2005628
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 1625284
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 18
+      MutableMode: 0
+  - Rotation:
+      RawValue: 103097
+    Position:
+      X:
+        RawValue: 1605151
+      Y:
+        RawValue: -1806109
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 224633
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 19
+      MutableMode: 0
+  - Rotation:
+      RawValue: 195983
+    Position:
+      X:
+        RawValue: 1335757
+      Y:
+        RawValue: -1540534
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 7
+    ShapeType: 8
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 271964
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: BottomStone
+      Tag: Untagged
+      Layer: 7
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 20
+      MutableMode: 0
+  - Rotation:
+      RawValue: 0
+    Position:
+      X:
+        RawValue: -1867776
+      Y:
+        RawValue: 0
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 6
+    ShapeType: 4
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 327680
+      Y:
+        RawValue: 2293760
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 0
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: Left
+      Tag: Untagged
+      Layer: 6
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 21
+      MutableMode: 0
+  - Rotation:
+      RawValue: 0
+    Position:
+      X:
+        RawValue: 1861222
+      Y:
+        RawValue: 0
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 6
+    ShapeType: 4
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 327680
+      Y:
+        RawValue: 2293760
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 0
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: Right
+      Tag: Untagged
+      Layer: 6
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 22
+      MutableMode: 0
+  - Rotation:
+      RawValue: 0
+    Position:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 1946419
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 6
+    ShapeType: 4
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 1966080
+      Y:
+        RawValue: 327680
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 0
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: Top
+      Tag: Untagged
+      Layer: 6
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 23
+      MutableMode: 0
+  - Rotation:
+      RawValue: 0
+    Position:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: -1926758
+    Height:
+      RawValue: 0
+    VerticalOffset:
+      RawValue: 0
+    PhysicsMaterial:
+      Id:
+        Value: 0
+    Layer: 6
+    ShapeType: 4
+    CircleRadius:
+      RawValue: 0
+    BoxExtents:
+      X:
+        RawValue: 1966080
+      Y:
+        RawValue: 327680
+    CapsuleSize:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    EdgeExtent:
+      RawValue: 0
+    PolygonCollider:
+      Vertices: []
+      Normals: []
+    StaticData:
+      Name: Bottom
+      Tag: Untagged
+      Layer: 6
+      Asset:
+        Id:
+          Value: 0
+      IsTrigger: 0
+      ColliderIndex: 24
+      MutableMode: 0
+  StaticColliders3D: []
+  MapEntities: []
+  SerializedTriangleDataUncompressedSize: 8
+  references:
+    version: 2
+    RefIds: []

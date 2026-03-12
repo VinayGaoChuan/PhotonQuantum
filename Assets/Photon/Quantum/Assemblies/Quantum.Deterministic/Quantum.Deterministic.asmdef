@@ -1,0 +1,16 @@
+{
+    "name": "Quantum.Deterministic",
+    "rootNamespace": "",
+    "references": [
+        "GUID:046fe2e81cc8db04ca53f063301172b9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

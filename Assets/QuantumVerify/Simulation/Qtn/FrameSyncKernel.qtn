@@ -1,0 +1,20 @@
+input
+{
+  Byte EncodedMoveDirection;
+  Byte ActionMask;
+}
+
+singleton component FrameSyncKernelState
+{
+  Int32 Tick;
+  FPVector2 P0Position;
+  FPVector2 P1Position;
+  FPVector2 P0Velocity;
+  FPVector2 P1Velocity;
+  FP P0Energy;
+  FP P1Energy;
+  FP Accumulator;
+  FP LastDistance;
+  Int32 BounceCount;
+  Int32 ActionCount;
+}

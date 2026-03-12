@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1283927171, guid: b156eeaae3f741b40af66649a4748430, type: 3}
+  m_Name: Map001_Map_Ground
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: _Resources/Prefab/Map/Map001/Map001_Map_Ground
+    Guid:
+      Value: 315809039913774620
+  Name: Ground
+  SerializeType: 0
+  RegionMaskBlockCount: 8
+  DataAsset:
+    Id:
+      Value: 371205345351613650
+  GridSizeX: 23
+  GridSizeY: 25
+  GridNodeSize: 2
+  WorldOffset:
+    X:
+      RawValue: -1507328
+    Y:
+      RawValue: -1638400
+  MinAgentRadius:
+    RawValue: 32768

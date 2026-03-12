@@ -1,0 +1,19 @@
+{
+  "name": "PQTest.QuantumVerify",
+  "rootNamespace": "Quantum",
+  "references": [
+    "Quantum.Deterministic",
+    "Quantum.Simulation",
+    "Quantum.Unity",
+    "Photon.Realtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": true,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
