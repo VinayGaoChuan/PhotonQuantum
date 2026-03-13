@@ -13,6 +13,7 @@ using UnityEngine;
 public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
   private const int DefaultTickCount = 360;
   private const int ServiceSlice = 12;
+  private const int FinalFrameOffset = 1;
   private static readonly int[] StateDigestFrames = { 60, 120, 180, 240, 300, 360 };
   private const int ScreenLineLimit = 24;
   private const int ScreenHashLength = 12;
@@ -141,11 +142,19 @@ public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
       yield break;
     }
 
-    if (runA.ChecksumDigest == runB.ChecksumDigest && runA.StateDigest == runB.StateDigest && runA.FinalState == runB.FinalState) {
+    AppendLine($"[RUN] repeatability-A checksum={runA.ChecksumDigest} state={runA.StateDigest} finalChecksum={runA.FinalChecksum} finalState={runA.FinalState}", showOnScreen: false);
+    AppendLine($"[RUN] repeatability-B checksum={runB.ChecksumDigest} state={runB.StateDigest} finalChecksum={runB.FinalChecksum} finalState={runB.FinalState}", showOnScreen: false);
+
+    var checksumStable = runA.ChecksumDigest == runB.ChecksumDigest;
+    var stateStable = runA.StateDigest == runB.StateDigest;
+    var finalChecksumStable = runA.FinalChecksum == runB.FinalChecksum;
+    var finalStateStable = runA.FinalState == runB.FinalState;
+
+    if (checksumStable && stateStable && finalChecksumStable && finalStateStable) {
       AppendLine($"<color=lime>PASS</color> repeatability | checksumDigest={runA.ChecksumDigest} stateDigest={runA.StateDigest}", showOnScreen: false);
       AppendScreenLine($"重复运行校验: 通过  哈希={ShortHash(runA.ChecksumDigest)}");
     } else {
-      AppendLine($"<color=red>FAIL</color> repeatability | A={runA.ChecksumDigest}/{runA.StateDigest} B={runB.ChecksumDigest}/{runB.StateDigest}", showOnScreen: false);
+      AppendLine($"<color=red>FAIL</color> repeatability | checksumStable={checksumStable} stateStable={stateStable} finalChecksumStable={finalChecksumStable} finalStateStable={finalStateStable} A={runA.ChecksumDigest}/{runA.StateDigest}/{runA.FinalChecksum} B={runB.ChecksumDigest}/{runB.StateDigest}/{runB.FinalChecksum}", showOnScreen: false);
       AppendScreenLine("重复运行校验: 失败");
     }
   }
@@ -207,9 +216,11 @@ public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
     var stateDigestIndex = 0;
     var playersAdded = false;
     var lastObservedFrame = -1;
+    var targetFinalFrame = scenario.TickCount + FinalFrameOffset;
+    ScenarioResult snapshotResult = null;
     ScenarioResult result = null;
     var scenarioFailed = false;
-    AppendLine($"[SCENARIO] {scenario.Name} players={scenario.PlayerCount} seed={scenario.Seed} ticks={scenario.TickCount}", showOnScreen: false);
+    AppendLine($"[SCENARIO] {scenario.Name} players={scenario.PlayerCount} seed={scenario.Seed} ticks={scenario.TickCount} targetFinalFrame={targetFinalFrame}", showOnScreen: false);
 
     callbackDispatcher.SubscribeManual((CallbackPollInput callback) => {
       if (callback.IsInputSet) {
@@ -300,7 +311,7 @@ public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
       yield break;
     }
 
-    while (runner.Session?.FramePredicted == null || runner.Session.FramePredicted.Number < scenario.TickCount) {
+    while (runner.Session?.FramePredicted == null || runner.Session.FramePredicted.Number < targetFinalFrame) {
       try {
         runner.Service(serviceStep);
         QuantumUnityDB.UpdateGlobal();
@@ -326,10 +337,22 @@ public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
           AppendLine($"[STATE] {scenario.Name} {checkpoint}", showOnScreen: false);
           stateDigestIndex++;
         }
+
+        if (snapshotResult == null && predicted.Number >= targetFinalFrame) {
+          var sampledState = ReadState(predicted);
+          snapshotResult = new ScenarioResult {
+            FinalFrame = predicted.Number,
+            FinalChecksum = FindChecksumForFrame(checksums, predicted.Number),
+            ChecksumDigest = ComputeDigest(checksums),
+            StateDigest = ComputeDigest(stateCheckpoints),
+            FinalState = BuildStateSummary(sampledState)
+          };
+          AppendLine($"[SCENARIO] {scenario.Name} snapshot frame={snapshotResult.FinalFrame} finalChecksum={snapshotResult.FinalChecksum}", showOnScreen: false);
+        }
       }
 
       if (predicted != null && predicted.Number % ServiceSlice == 0) {
-        _summary = $"运行 {scenario.Name} 帧={predicted.Number}/{scenario.TickCount}";
+        _summary = $"运行 {scenario.Name} 帧={predicted.Number}/{targetFinalFrame}";
         yield return null;
       }
     }
@@ -340,23 +363,38 @@ public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
       yield break;
     }
 
-    var finalFrame = runner.Session.FramePredicted as Frame;
-    if (finalFrame == null) {
+    if (snapshotResult == null) {
+      var finalFrame = runner.Session.FramePredicted as Frame;
+      if (finalFrame == null) {
+        result = new ScenarioResult {
+          Error = $"Predicted frame is not a Quantum.Frame for {scenario.Name}"
+        };
+        CompleteScenario(runner, dynamicDb, onComplete, result);
+        yield return null;
+        yield break;
+      }
+
+      var finalState = ReadState(finalFrame);
+      snapshotResult = new ScenarioResult {
+        FinalFrame = finalFrame.Number,
+        FinalChecksum = FindChecksumForFrame(checksums, finalFrame.Number),
+        ChecksumDigest = ComputeDigest(checksums),
+        StateDigest = ComputeDigest(stateCheckpoints),
+        FinalState = BuildStateSummary(finalState)
+      };
+      AppendLine($"[WARN] {scenario.Name} fallback snapshot frame={snapshotResult.FinalFrame} finalChecksum={snapshotResult.FinalChecksum}", showOnScreen: false);
+    }
+
+    if (string.IsNullOrEmpty(snapshotResult.FinalChecksum)) {
       result = new ScenarioResult {
-        Error = $"Predicted frame is not a Quantum.Frame for {scenario.Name}"
+        Error = $"Missing checksum for sampled frame in {scenario.Name}"
       };
       CompleteScenario(runner, dynamicDb, onComplete, result);
       yield return null;
       yield break;
     }
-    var finalState = ReadState(finalFrame);
-    result = new ScenarioResult {
-      FinalFrame = finalFrame.Number,
-      FinalChecksum = checksums.Count > 0 ? checksums[checksums.Count - 1].Checksum : "0",
-      ChecksumDigest = ComputeDigest(checksums),
-      StateDigest = ComputeDigest(stateCheckpoints),
-      FinalState = BuildStateSummary(finalState)
-    };
+
+    result = snapshotResult;
 
     CompleteScenario(runner, dynamicDb, onComplete, result);
     yield return null;
@@ -610,6 +648,16 @@ public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
       builder.Append(';');
     }
     return ComputeDigest(builder.ToString());
+  }
+
+  private static string FindChecksumForFrame(List<ChecksumPoint> values, int frame) {
+    for (var i = values.Count - 1; i >= 0; i--) {
+      if (values[i].Frame == frame) {
+        return values[i].Checksum;
+      }
+    }
+
+    return string.Empty;
   }
 
   private static string ComputeDigest(string value) {
