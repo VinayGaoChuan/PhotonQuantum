@@ -16,4 +16,10 @@ MonoBehaviour:
     Path: _Resources/QuantumConfigs/DefaultSystemsConfig
     Guid:
       Value: 444829068048956941
-  Entries: []
+  Entries:
+  - SystemType:
+      AssemblyQualifiedName: Quantum.FrameSyncKernelSystem, PQTest.QuantumVerify,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    SystemName: 
+    StartDisabled: 0
+    Children: []

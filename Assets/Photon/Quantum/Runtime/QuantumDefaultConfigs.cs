@@ -31,8 +31,6 @@ namespace Quantum {
     /// </summary>
     public CharacterController3DConfig CharacterController3DConfig;
     
-    public KCCSettings KCCSettings;
-    
     /// <summary>
     /// The default NavMeshAgent config assigned inside <see cref="SimulationConfig"/>.
     /// </summary>

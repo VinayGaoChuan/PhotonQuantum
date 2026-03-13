@@ -7,7 +7,7 @@ namespace Quantum {
     private static readonly FP ActionDrain = FP._0_03;
     private static readonly FP BaseAcceleration = FP._0_05;
     private static readonly FP ActionAcceleration = FP._0_03;
-    private static readonly FP Friction = FP._0_92;
+    private static readonly FP Friction = FP.FromFloat_UNSAFE(0.92f);
     private static readonly FP MaxSpeed = FP._1 + FP._0_50;
 
     public override void OnInit(Frame f) {

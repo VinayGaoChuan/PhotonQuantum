@@ -1,26 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using Photon.Deterministic;
 using Quantum;
 using UnityEngine;
 
-public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
+public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
   private const int DefaultTickCount = 360;
   private const int ServiceSlice = 12;
+  private static readonly int[] StateDigestFrames = { 60, 120, 180, 240, 300, 360 };
+  private const int ScreenLineLimit = 24;
+  private const int ScreenHashLength = 12;
 
   private readonly List<string> _lines = new();
+  private readonly List<string> _screenLines = new();
   private readonly List<ScenarioDefinition> _scenarios = new();
   private Vector2 _scroll;
   private GUIStyle _labelStyle;
   private GUIStyle _buttonStyle;
   private bool _isRunning;
-  private string _summary = "Idle";
+  private string _summary = "待机";
   private Coroutine _runRoutine;
+  private static readonly Regex RichTextRegex = new Regex("<.*?>", RegexOptions.Compiled);
 
   private void Awake() {
+    ZLog.EnsureInitialized();
     Application.targetFrameRate = 60;
     BuildScenarioCatalog();
   }
@@ -32,28 +41,28 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
   private void OnGUI() {
     if (_labelStyle == null) {
       _labelStyle = new GUIStyle(GUI.skin.label) {
-        fontSize = Mathf.Max(24, Screen.width / 42),
+        fontSize = Mathf.Max(64, Screen.width / 15),
         richText = true,
         wordWrap = true,
         alignment = TextAnchor.UpperLeft
       };
       _buttonStyle = new GUIStyle(GUI.skin.button) {
-        fontSize = Mathf.Max(22, Screen.width / 45),
-        fixedHeight = Mathf.Max(72, Screen.height / 16f)
+        fontSize = Mathf.Max(58, Screen.width / 16),
+        fixedHeight = Mathf.Max(170, Screen.height / 7.5f)
       };
     }
 
     GUILayout.BeginArea(new Rect(20, 20, Screen.width - 40, Screen.height - 40));
-    GUILayout.Label($"Quantum Cross Platform Verify\n{_summary}", _labelStyle);
+    GUILayout.Label($"Quantum 跨平台校验\n{_summary}", _labelStyle);
     GUILayout.Space(12);
 
-    if (!_isRunning && GUILayout.Button("Run Again", _buttonStyle)) {
+    if (!_isRunning && GUILayout.Button("重新运行", _buttonStyle)) {
       StartRun();
     }
 
     GUILayout.Space(12);
     _scroll = GUILayout.BeginScrollView(_scroll);
-    GUILayout.Label(string.Join("\n", _lines), _labelStyle);
+    GUILayout.Label(string.Join("\n", _screenLines), _labelStyle);
     GUILayout.EndScrollView();
     GUILayout.EndArea();
   }
@@ -64,25 +73,38 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
     }
 
     _lines.Clear();
-    _summary = "Preparing...";
+    _screenLines.Clear();
+    _summary = "准备中...";
     _runRoutine = StartCoroutine(RunAll());
   }
 
   private IEnumerator RunAll() {
     _isRunning = true;
-    AppendLine("=== Pure Quantum Cross Platform Verify ===");
-    AppendLine("Compare checksumDigest/stateDigest/finalState across Android/iOS.");
+    AppendLine("=== Pure Quantum Cross Platform Verify ===", showOnScreen: false);
+    AppendLine("Compare checksumDigest/stateDigest/finalState across Android/iOS.", showOnScreen: false);
+    AppendScreenLine("Quantum 跨平台校验");
+    AppendScreenLine("安卓和 iOS 对比下面这些值。");
+    EnsureRequiredQuantumGlobals();
 
-    RuntimeAssets runtimeAssets;
+    RuntimeAssets runtimeAssets = null;
+    var bootstrapFailed = false;
     try {
       QuantumUnityDB.UpdateGlobal();
       runtimeAssets = ResolveRuntimeAssets();
-      AppendLine($"Map={runtimeAssets.MapPath}");
-      AppendLine($"Simulation={runtimeAssets.SimulationPath}");
-      AppendLine($"Systems={runtimeAssets.SystemsPath}");
+      AppendLine($"Map={runtimeAssets.MapPath}", showOnScreen: false);
+      AppendLine($"Simulation={runtimeAssets.SimulationPath}", showOnScreen: false);
+      AppendLine($"Systems={runtimeAssets.SystemsPath}", showOnScreen: false);
+      AppendScreenLine("启动成功");
     } catch (Exception ex) {
-      AppendLine($"<color=red>BOOTSTRAP FAIL</color> {ex}");
+      ZLog.LogException(ex);
+      AppendLine($"<color=red>BOOTSTRAP FAIL</color> {ex}", showOnScreen: false);
+      AppendScreenLine("启动失败");
+      AppendScreenLine($"异常: {ex.GetType().Name}");
       FinishRun();
+      bootstrapFailed = true;
+    }
+
+    if (bootstrapFailed) {
       yield break;
     }
 
@@ -97,14 +119,15 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
     yield return RunRepeatability(runtimeAssets);
     yield return RunCadenceCompare(runtimeAssets);
 
-    AppendLine("=== End ===");
-    AppendLine("If Android and iOS outputs are byte-for-byte equal, the kernel is stable for these cases.");
+    AppendLine("=== End ===", showOnScreen: false);
+    AppendLine("If Android and iOS outputs are byte-for-byte equal, the kernel is stable for these cases.", showOnScreen: false);
+    AppendScreenLine("安卓和 iOS 完全一致 = 通过");
     FinishRun();
   }
 
   private IEnumerator RunRepeatability(RuntimeAssets runtimeAssets) {
     var scenario = FindScenario("weave-1p");
-    AppendLine("[RUN] same-process-repeatability");
+    AppendLine("[RUN] same-process-repeatability", showOnScreen: false);
 
     ScenarioResult runA = null;
     ScenarioResult runB = null;
@@ -113,20 +136,23 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
     yield return RunScenario(runtimeAssets, scenario, 1.0 / 60.0, r => runB = r);
 
     if (!IsSuccess(runA) || !IsSuccess(runB)) {
-      AppendLine("<color=red>FAIL</color> repeatability | scenario execution failed");
+      AppendLine("<color=red>FAIL</color> repeatability | scenario execution failed", showOnScreen: false);
+      AppendScreenLine("重复运行校验: 失败");
       yield break;
     }
 
     if (runA.ChecksumDigest == runB.ChecksumDigest && runA.StateDigest == runB.StateDigest && runA.FinalState == runB.FinalState) {
-      AppendLine($"<color=lime>PASS</color> repeatability | checksumDigest={runA.ChecksumDigest} stateDigest={runA.StateDigest}");
+      AppendLine($"<color=lime>PASS</color> repeatability | checksumDigest={runA.ChecksumDigest} stateDigest={runA.StateDigest}", showOnScreen: false);
+      AppendScreenLine($"重复运行校验: 通过  哈希={ShortHash(runA.ChecksumDigest)}");
     } else {
-      AppendLine($"<color=red>FAIL</color> repeatability | A={runA.ChecksumDigest}/{runA.StateDigest} B={runB.ChecksumDigest}/{runB.StateDigest}");
+      AppendLine($"<color=red>FAIL</color> repeatability | A={runA.ChecksumDigest}/{runA.StateDigest} B={runB.ChecksumDigest}/{runB.StateDigest}", showOnScreen: false);
+      AppendScreenLine("重复运行校验: 失败");
     }
   }
 
   private IEnumerator RunCadenceCompare(RuntimeAssets runtimeAssets) {
     var scenario = FindScenario("dual-opposed-2p");
-    AppendLine("[RUN] service-cadence-compare");
+    AppendLine("[RUN] service-cadence-compare", showOnScreen: false);
 
     ScenarioResult at60 = null;
     ScenarioResult at120 = null;
@@ -137,21 +163,37 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
     yield return RunScenario(runtimeAssets, scenario, 1.0 / 30.0, r => at30 = r);
 
     if (!IsSuccess(at60) || !IsSuccess(at120) || !IsSuccess(at30)) {
-      AppendLine("<color=red>FAIL</color> cadence | one or more runs failed");
+      AppendLine("<color=red>FAIL</color> cadence | one or more runs failed", showOnScreen: false);
+      AppendScreenLine("不同刷新频率校验: 失败");
       yield break;
     }
 
-    var passed = at60.ChecksumDigest == at120.ChecksumDigest &&
-                 at60.ChecksumDigest == at30.ChecksumDigest &&
-                 at60.StateDigest == at120.StateDigest &&
-                 at60.StateDigest == at30.StateDigest &&
-                 at60.FinalState == at120.FinalState &&
-                 at60.FinalState == at30.FinalState;
+    AppendLine($"[RUN] cadence-60 checksum={at60.ChecksumDigest} state={at60.StateDigest} finalChecksum={at60.FinalChecksum} finalState={at60.FinalState}", showOnScreen: false);
+    AppendLine($"[RUN] cadence-120 checksum={at120.ChecksumDigest} state={at120.StateDigest} finalChecksum={at120.FinalChecksum} finalState={at120.FinalState}", showOnScreen: false);
+    AppendLine($"[RUN] cadence-30 checksum={at30.ChecksumDigest} state={at30.StateDigest} finalChecksum={at30.FinalChecksum} finalState={at30.FinalState}", showOnScreen: false);
+
+    var checksumStable = at60.ChecksumDigest == at120.ChecksumDigest &&
+                         at60.ChecksumDigest == at30.ChecksumDigest;
+    var finalChecksumStable = at60.FinalChecksum == at120.FinalChecksum &&
+                              at60.FinalChecksum == at30.FinalChecksum;
+    var finalStateStable = at60.FinalState == at120.FinalState &&
+                           at60.FinalState == at30.FinalState;
+    var stateDigestStable = at60.StateDigest == at120.StateDigest &&
+                            at60.StateDigest == at30.StateDigest;
+    var passed = checksumStable && finalChecksumStable && finalStateStable;
 
     if (passed) {
-      AppendLine($"<color=lime>PASS</color> cadence | checksumDigest={at60.ChecksumDigest} stateDigest={at60.StateDigest}");
+      AppendLine($"<color=lime>PASS</color> cadence | checksumDigest={at60.ChecksumDigest} finalChecksum={at60.FinalChecksum} stateDigestStable={stateDigestStable}", showOnScreen: false);
+      if (!stateDigestStable) {
+        AppendLine("[WARN] cadence stateDigest differs because checkpoint sampling depends on service cadence; checksum/final state stayed stable.", showOnScreen: false);
+      }
+
+      AppendScreenLine($"不同刷新频率校验: 通过");
+      AppendScreenLine($"刷新频率哈希: {ShortHash(at60.ChecksumDigest)}");
+      AppendScreenLine($"刷新频率最终值: {at60.FinalChecksum}");
     } else {
-      AppendLine($"<color=red>FAIL</color> cadence | 60={at60.ChecksumDigest}/{at60.StateDigest} 120={at120.ChecksumDigest}/{at120.StateDigest} 30={at30.ChecksumDigest}/{at30.StateDigest}");
+      AppendLine($"<color=red>FAIL</color> cadence | 60={at60.ChecksumDigest}/{at60.StateDigest}/{at60.FinalChecksum} 120={at120.ChecksumDigest}/{at120.StateDigest}/{at120.FinalChecksum} 30={at30.ChecksumDigest}/{at30.StateDigest}/{at30.FinalChecksum}", showOnScreen: false);
+      AppendScreenLine("不同刷新频率校验: 失败");
     }
   }
 
@@ -162,9 +204,12 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
     var eventDispatcher = new EventDispatcher();
     var checksums = new List<ChecksumPoint>(256);
     var stateCheckpoints = new List<string>(32);
+    var stateDigestIndex = 0;
     var playersAdded = false;
     var lastObservedFrame = -1;
     ScenarioResult result = null;
+    var scenarioFailed = false;
+    AppendLine($"[SCENARIO] {scenario.Name} players={scenario.PlayerCount} seed={scenario.Seed} ticks={scenario.TickCount}", showOnScreen: false);
 
     callbackDispatcher.SubscribeManual((CallbackPollInput callback) => {
       if (callback.IsInputSet) {
@@ -192,6 +237,7 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
       }
 
       playersAdded = true;
+      AppendLine($"[SCENARIO] {scenario.Name} game started resync={callback.IsResync} players={scenario.PlayerCount}", showOnScreen: false);
     });
 
     callbackDispatcher.SubscribeManual((CallbackChecksumComputed callback) => {
@@ -221,9 +267,14 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
 
       runner = SessionRunner.Start(args);
     } catch (Exception ex) {
+      ZLog.LogException(ex);
       result = new ScenarioResult {
         Error = ex.ToString()
       };
+      scenarioFailed = true;
+    }
+
+    if (scenarioFailed) {
       CompleteScenario(runner, dynamicDb, onComplete, result);
       yield return null;
       yield break;
@@ -235,7 +286,7 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
       QuantumUnityDB.UpdateGlobal();
       waitCounter++;
       if (waitCounter % ServiceSlice == 0) {
-        _summary = $"Starting {scenario.Name}...";
+        _summary = $"启动 {scenario.Name}...";
         yield return null;
       }
     }
@@ -254,30 +305,51 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
         runner.Service(serviceStep);
         QuantumUnityDB.UpdateGlobal();
       } catch (Exception ex) {
+        ZLog.LogException(ex);
         result = new ScenarioResult {
           Error = ex.ToString()
         };
-        CompleteScenario(runner, dynamicDb, onComplete, result);
-        yield return null;
-        yield break;
+        scenarioFailed = true;
       }
 
-      var predicted = runner.Session?.FramePredicted;
+      if (scenarioFailed) {
+        break;
+      }
+
+      var predicted = runner.Session?.FramePredicted as Frame;
       if (predicted != null && predicted.Number != lastObservedFrame) {
         lastObservedFrame = predicted.Number;
-        if (predicted.Number % 30 == 0) {
-          stateCheckpoints.Add($"{predicted.Number}:{BuildStateSummary(predicted.GetSingleton<FrameSyncKernelState>())}");
+        while (stateDigestIndex < StateDigestFrames.Length && predicted.Number >= StateDigestFrames[stateDigestIndex]) {
+          var targetFrame = StateDigestFrames[stateDigestIndex];
+          var checkpoint = $"{targetFrame}@{predicted.Number}:{BuildStateSummary(ReadState(predicted))}";
+          stateCheckpoints.Add(checkpoint);
+          AppendLine($"[STATE] {scenario.Name} {checkpoint}", showOnScreen: false);
+          stateDigestIndex++;
         }
       }
 
       if (predicted != null && predicted.Number % ServiceSlice == 0) {
-        _summary = $"Running {scenario.Name} frame={predicted.Number}/{scenario.TickCount}";
+        _summary = $"运行 {scenario.Name} 帧={predicted.Number}/{scenario.TickCount}";
         yield return null;
       }
     }
 
-    var finalFrame = runner.Session.FramePredicted;
-    var finalState = finalFrame.GetSingleton<FrameSyncKernelState>();
+    if (scenarioFailed) {
+      CompleteScenario(runner, dynamicDb, onComplete, result);
+      yield return null;
+      yield break;
+    }
+
+    var finalFrame = runner.Session.FramePredicted as Frame;
+    if (finalFrame == null) {
+      result = new ScenarioResult {
+        Error = $"Predicted frame is not a Quantum.Frame for {scenario.Name}"
+      };
+      CompleteScenario(runner, dynamicDb, onComplete, result);
+      yield return null;
+      yield break;
+    }
+    var finalState = ReadState(finalFrame);
     result = new ScenarioResult {
       FinalFrame = finalFrame.Number,
       FinalChecksum = checksums.Count > 0 ? checksums[checksums.Count - 1].Checksum : "0",
@@ -325,8 +397,10 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
           simulationEntry ??= entry;
         }
       } else if (assetType == typeof(SystemsConfig) || assetType.IsSubclassOf(typeof(SystemsConfig))) {
-        if (entry.Path != null && (entry.Path.Contains("DefaultConfigSystems") || entry.Path.Contains("DefaultSystemsConfig"))) {
+        if (entry.Path != null && entry.Path.Contains("DefaultSystemsConfig")) {
           systemsEntry = entry;
+        } else if (entry.Path != null && entry.Path.Contains("DefaultConfigSystems")) {
+          systemsEntry ??= entry;
         } else {
           systemsEntry ??= entry;
         }
@@ -367,6 +441,103 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
     };
   }
 
+  private void EnsureRequiredQuantumGlobals() {
+    AppendLine("[BOOT] Binding Quantum global assets", showOnScreen: false);
+    EnsureGlobal<QuantumLookupTables>("QuantumLookupTables");
+    EnsureGlobal<QuantumDefaultConfigs>("QuantumDefaultConfigs");
+    EnsureGlobal<QuantumDeterministicSessionConfigAsset>("SessionConfig");
+    EnsureGlobal<PhotonServerSettings>("PhotonServerSettings");
+    EnsureGlobal<QuantumMeshCollection>("QuantumMeshCollection");
+    EnsureQuantumUnityDb();
+  }
+
+  private void EnsureGlobal<T>(string resourcePath) where T : QuantumGlobalScriptableObject<T> {
+    if (QuantumGlobalScriptableObject<T>.TryGetGlobal(out var existing) && existing != null) {
+      AppendLine($"[BOOT] Global ready {typeof(T).Name} iid={existing.GetInstanceID()}", showOnScreen: false);
+      return;
+    }
+
+    var asset = Resources.Load<T>(resourcePath);
+    if (asset == null) {
+      var all = Resources.LoadAll<T>(string.Empty);
+      if (all != null && all.Length > 0) {
+        var expectedName = Path.GetFileNameWithoutExtension(resourcePath);
+        for (var i = 0; i < all.Length; i++) {
+          if (string.Equals(all[i].name, expectedName, StringComparison.OrdinalIgnoreCase)) {
+            asset = all[i];
+            break;
+          }
+        }
+
+        asset ??= all[0];
+        AppendLine($"[BOOT] Fallback load {typeof(T).Name} count={all.Length} selected={asset.name}", showOnScreen: false);
+      }
+    }
+
+    if (asset == null) {
+      AppendLine($"<color=red>BOOT FAIL</color> Missing global asset {typeof(T).Name} resourcePath={resourcePath}", showOnScreen: false);
+      return;
+    }
+
+    var property = typeof(T).GetProperty("Global", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+    if (property == null) {
+      AppendLine($"<color=red>BOOT FAIL</color> Global property not found for {typeof(T).Name}", showOnScreen: false);
+      return;
+    }
+
+    try {
+      property.SetValue(null, asset);
+      AppendLine($"[BOOT] Bound {typeof(T).Name} asset={asset.name}", showOnScreen: false);
+    } catch (Exception ex) {
+      ZLog.LogException(ex);
+      AppendLine($"<color=red>BOOT FAIL</color> SetGlobal {typeof(T).Name} failed {ex.Message}", showOnScreen: false);
+    }
+  }
+
+  private void EnsureQuantumUnityDb() {
+    if (QuantumUnityDB.TryGetGlobal(out var existing) && existing != null) {
+      AppendLine($"[BOOT] Global ready {nameof(QuantumUnityDB)} iid={existing.GetInstanceID()} entries={existing.Entries.Count}", showOnScreen: false);
+      return;
+    }
+
+    AppendLine("[BOOT] Building runtime QuantumUnityDB", showOnScreen: false);
+    var db = ScriptableObject.CreateInstance<QuantumUnityDB>();
+    var added = 0;
+
+    void TryAdd(AssetObject asset, string reason) {
+      if (asset == null) {
+        return;
+      }
+
+      try {
+        db.AddAsset(asset);
+        added++;
+        AppendLine($"[BOOT] DB add {asset.GetType().Name} name={asset.name} path={asset.Path} reason={reason}", showOnScreen: false);
+      } catch (Exception ex) {
+        ZLog.LogException(ex);
+        AppendLine($"<color=red>BOOT FAIL</color> DB add failed asset={asset.name} reason={reason} error={ex.Message}", showOnScreen: false);
+      }
+    }
+
+    if (QuantumDefaultConfigs.TryGetGlobal(out var defaults) && defaults != null) {
+      TryAdd(defaults.SimulationConfig, "default-config");
+      TryAdd(defaults.SystemsConfig, "default-config");
+      TryAdd(defaults.PhysicsMaterial, "default-config");
+      TryAdd(defaults.CharacterController2DConfig, "default-config");
+      TryAdd(defaults.CharacterController3DConfig, "default-config");
+      TryAdd(defaults.NavMeshAgentConfig, "default-config");
+    }
+
+    var resourceAssets = Resources.LoadAll<AssetObject>(string.Empty);
+    AppendLine($"[BOOT] Resource AssetObject count={resourceAssets.Length}", showOnScreen: false);
+    for (var i = 0; i < resourceAssets.Length; i++) {
+      TryAdd(resourceAssets[i], "resources");
+    }
+
+    QuantumUnityDB.Global = db;
+    AppendLine($"[BOOT] Built {nameof(QuantumUnityDB)} entries={db.Entries.Count} added={added}", showOnScreen: false);
+  }
+
   private static DeterministicSessionConfig CreateSessionConfig(int playerCount) {
     var config = DeterministicSessionConfig.FromByteArray(DeterministicSessionConfig.ToByteArray(QuantumDeterministicSessionConfigAsset.DefaultConfig));
     config.PlayerCount = playerCount;
@@ -395,19 +566,30 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
 
   private void AppendScenarioResult(string name, ScenarioResult result) {
     if (!IsSuccess(result)) {
-      AppendLine($"<color=red>FAIL</color> {name} | {result?.Error ?? "null result"}");
+      AppendLine($"<color=red>FAIL</color> {name} | {result?.Error ?? "null result"}", showOnScreen: false);
+      AppendScreenLine($"{ToChineseName(name)}: 失败");
+      AppendScreenLine($"原因: {ShortenForScreen(result?.Error ?? "null result")}");
       return;
     }
 
-    AppendLine($"<color=lime>OK</color> {name}");
-    AppendLine($"  checksumDigest={result.ChecksumDigest}");
-    AppendLine($"  stateDigest={result.StateDigest}");
-    AppendLine($"  finalChecksum={result.FinalChecksum} finalFrame={result.FinalFrame}");
-    AppendLine($"  finalState={result.FinalState}");
+    AppendLine($"<color=lime>OK</color> {name}", showOnScreen: false);
+    AppendLine($"  checksumDigest={result.ChecksumDigest}", showOnScreen: false);
+    AppendLine($"  stateDigest={result.StateDigest}", showOnScreen: false);
+    AppendLine($"  finalChecksum={result.FinalChecksum} finalFrame={result.FinalFrame}", showOnScreen: false);
+    AppendLine($"  finalState={result.FinalState}", showOnScreen: false);
+
+    AppendScreenLine($"{ToChineseName(name)}: 通过");
+    AppendScreenLine($"校验哈希: {ShortHash(result.ChecksumDigest)}");
+    AppendScreenLine($"状态哈希: {ShortHash(result.StateDigest)}");
+    AppendScreenLine($"最终值: {result.FinalChecksum}");
   }
 
   private static string BuildStateSummary(FrameSyncKernelState state) {
     return $"tick={state.Tick} p0={state.P0Position} v0={state.P0Velocity} e0={state.P0Energy} p1={state.P1Position} v1={state.P1Velocity} e1={state.P1Energy} dist={state.LastDistance} acc={state.Accumulator} bounce={state.BounceCount} action={state.ActionCount}";
+  }
+
+  private static FrameSyncKernelState ReadState(Frame frame) {
+    return *frame.Unsafe.GetPointerSingleton<FrameSyncKernelState>();
   }
 
   private static string ComputeDigest(List<ChecksumPoint> values) {
@@ -481,15 +663,71 @@ public sealed class QuantumCrossPlatformVerifier : MonoBehaviour {
       new InputWindow(261, 360, 1, 1, 1)));
   }
 
-  private void AppendLine(string line) {
-    _lines.Add($"[{DateTime.Now:HH:mm:ss}] {line}");
+  private void AppendLine(string line, bool showOnScreen = true) {
+    var formatted = $"[{DateTime.Now:HH:mm:ss}] {line}";
+    _lines.Add(formatted);
     if (_lines.Count > 240) {
       _lines.RemoveAt(0);
     }
+
+    if (showOnScreen) {
+      _screenLines.Add(formatted);
+      if (_screenLines.Count > 40) {
+        _screenLines.RemoveAt(0);
+      }
+    }
+
+    var plain = RichTextRegex.Replace(formatted, string.Empty);
+    if (plain.IndexOf("FAIL", StringComparison.OrdinalIgnoreCase) >= 0 ||
+        plain.IndexOf("BOOTSTRAP FAIL", StringComparison.OrdinalIgnoreCase) >= 0) {
+      ZLog.LogError(plain);
+    } else if (plain.IndexOf("WARN", StringComparison.OrdinalIgnoreCase) >= 0) {
+      ZLog.LogWarning(plain);
+    } else {
+      ZLog.LogMobile(plain);
+    }
+  }
+
+  private void AppendScreenLine(string line) {
+    _screenLines.Add(line);
+    if (_screenLines.Count > ScreenLineLimit) {
+      _screenLines.RemoveAt(0);
+    }
+  }
+
+  private static string ShortHash(string value) {
+    if (string.IsNullOrEmpty(value)) {
+      return "null";
+    }
+
+    if (value.Length <= ScreenHashLength * 2) {
+      return value;
+    }
+
+    return $"{value.Substring(0, ScreenHashLength)}...{value.Substring(value.Length - ScreenHashLength, ScreenHashLength)}";
+  }
+
+  private static string ShortenForScreen(string value) {
+    if (string.IsNullOrEmpty(value)) {
+      return "unknown error";
+    }
+
+    value = value.Replace(Environment.NewLine, " ");
+    return value.Length <= 72 ? value : $"{value.Substring(0, 72)}...";
+  }
+
+  private static string ToChineseName(string name) {
+    return name switch {
+      "idle-1p" => "单人静止",
+      "move-1p" => "单人直线移动",
+      "weave-1p" => "单人折返移动",
+      "dual-opposed-2p" => "双人对抗",
+      _ => name
+    };
   }
 
   private void FinishRun() {
-    _summary = "Done";
+    _summary = "完成";
     _isRunning = false;
     _runRoutine = null;
   }

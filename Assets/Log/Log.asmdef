@@ -1,12 +1,7 @@
 {
-    "name": "PQTest.QuantumVerify",
-    "rootNamespace": "Quantum",
-    "references": [
-        "Quantum.Deterministic",
-        "Quantum.Simulation",
-        "Quantum.Unity",
-        "Log"
-    ],
+    "name": "Log",
+    "rootNamespace": "",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
