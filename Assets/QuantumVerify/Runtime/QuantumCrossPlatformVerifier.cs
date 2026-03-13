@@ -41,14 +41,14 @@ public sealed unsafe class QuantumCrossPlatformVerifier : MonoBehaviour {
   private void OnGUI() {
     if (_labelStyle == null) {
       _labelStyle = new GUIStyle(GUI.skin.label) {
-        fontSize = Mathf.Max(64, Screen.width / 15),
+        fontSize = Mathf.Max(42, Screen.width / 22),
         richText = true,
         wordWrap = true,
         alignment = TextAnchor.UpperLeft
       };
       _buttonStyle = new GUIStyle(GUI.skin.button) {
-        fontSize = Mathf.Max(58, Screen.width / 16),
-        fixedHeight = Mathf.Max(170, Screen.height / 7.5f)
+        fontSize = Mathf.Max(38, Screen.width / 24),
+        fixedHeight = Mathf.Max(114, Screen.height / 11f)
       };
     }
 
