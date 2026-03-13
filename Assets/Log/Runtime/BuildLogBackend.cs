@@ -69,14 +69,14 @@ public class BuildLogBackend : ILogBackend
                 break;
             case LogLevel.Error:
             case LogLevel.Exception:
-                Logger._suppressHandle = true;
+                ZLog._suppressHandle = true;
                 try
                 {
                     Debug.LogError(final);
                 }
                 finally
                 {
-                    Logger._suppressHandle = false;
+                    ZLog._suppressHandle = false;
                 }
                 break;
             default:

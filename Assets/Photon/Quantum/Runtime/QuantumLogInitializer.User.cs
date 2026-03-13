@@ -6,10 +6,10 @@ namespace Quantum {
       }
 
       global::Quantum.Log.Init(
-        error: msg => ZLog.LogErrorChannel(msg, "Quantum"),
-        warn: msg => ZLog.LogWarningChannel(msg, "Quantum"),
-        info: msg => ZLog.Log(msg, "Quantum"),
-        exn: ex => ZLog.LogExceptionChannel(ex, "Quantum"));
+        error: msg => ZLog.LogError(msg, "Quantum"),
+        warn: msg => ZLog.LogWarning(msg, "Quantum"),
+        info: msg => ZLog.LogMobile(msg, "Quantum"),
+        exn: ex => ZLog.LogException(ex, "Quantum"));
     }
   }
 }

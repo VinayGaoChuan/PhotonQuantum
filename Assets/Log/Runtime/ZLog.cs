@@ -207,33 +207,21 @@ public static class ZLog
 #endif
 
     [DebuggerHidden, DebuggerStepThrough]
-    public static void LogErrorObject(string message, Object context, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Error, memberName, filePath, lineNumber, null, context);
+    public static void LogErrorObject(string message, Object context, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Error, memberName, filePath, lineNumber, channel, context);
 
-    [DebuggerHidden, DebuggerStepThrough]
-    public static void LogErrorObjectChannel(string message, Object context, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
-    {
-        if (!IsChannelEnabled(channel)) return;
-        InternalLog(message, LogLevel.Error, memberName, filePath, lineNumber, channel, context);
-    }
 
-    [DebuggerHidden, DebuggerStepThrough]
-    public static void LogWarningObject(object message, Object context, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Warning, memberName, filePath, lineNumber, null, context);
+    [Conditional("UNITY_EDITOR"), DebuggerHidden, DebuggerStepThrough]
+    public static void LogWarningObject(object message, Object context, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Warning, memberName, filePath, lineNumber, channel, context);
+    
 
-    [DebuggerHidden, DebuggerStepThrough]
-    public static void LogWarningObjectChannel(object message, Object context, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
-    {
-        if (!IsChannelEnabled(channel)) return;
-        InternalLog(message, LogLevel.Warning, memberName, filePath, lineNumber, channel, context);
-    }
-
-    [Conditional("UNITY_EDITOR"), Conditional("ENABLE_LOG"), DebuggerHidden, DebuggerStepThrough]
+    [Conditional("UNITY_EDITOR"), DebuggerHidden, DebuggerStepThrough]
     public static void LogObject(string message, Object context, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         if (!IsChannelEnabled(channel)) return;
         InternalLog(message, LogLevel.Info, memberName, filePath, lineNumber, channel, context);
     }
 
-    [Conditional("UNITY_EDITOR"), DebuggerHidden, DebuggerStepThrough]
+    [Conditional("UNITY_EDITOR"), Conditional("LOG_MOBILE"), DebuggerHidden, DebuggerStepThrough]
     public static void Log(string message, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         if (!IsChannelEnabled(channel)) return;
@@ -241,52 +229,22 @@ public static class ZLog
     }
 
     [DebuggerHidden, DebuggerStepThrough]
-    public static void LogMobile(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Info, memberName, filePath, lineNumber, null, null);
+    public static void LogMobile(string message, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Info, memberName, filePath, lineNumber, channel, null);
 
     // ======== Log Warning ========
 
     [DebuggerHidden, DebuggerStepThrough]
-    public static void LogWarning(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Warning, memberName, filePath, lineNumber, null, null);
-
-    [DebuggerHidden, DebuggerStepThrough]
-    public static void LogWarningChannel(string message, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
-    {
-        if (!IsChannelEnabled(channel)) return;
-        InternalLog(message, LogLevel.Warning, memberName, filePath, lineNumber, channel, null);
-    }
+    public static void LogWarning(string message, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Warning, memberName, filePath, lineNumber, channel, null);
 
     // ======== Log Error ========
     [DebuggerHidden, DebuggerStepThrough]
-    public static void LogError(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Error, memberName, filePath, lineNumber, null, null);
-
-    [DebuggerHidden, DebuggerStepThrough]
-    public static void LogErrorChannel(string message, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
-    {
-        if (!IsChannelEnabled(channel)) return;
-        InternalLog(message, LogLevel.Error, memberName, filePath, lineNumber, channel, null);
-    }
+    public static void LogError(string message, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => InternalLog(message, LogLevel.Error, memberName, filePath, lineNumber, channel, null);
 
     // ======== Log Exception ========
     [DebuggerHidden, DebuggerStepThrough]
-    public static void LogException(Exception exception, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+    public static void LogException(Exception exception, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
     {
         if (exception == null) return;
-        _suppressHandle = true;
-        try
-        {
-            InternalLog(exception, LogLevel.Exception, memberName, filePath, lineNumber, null, null);
-        }
-        finally
-        {
-            _suppressHandle = false;
-        }
-    }
-
-    [DebuggerHidden, DebuggerStepThrough]
-    public static void LogExceptionChannel(Exception exception, string channel = "Default", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
-    {
-        if (exception == null) return;
-        if (!IsChannelEnabled(channel)) return;
         _suppressHandle = true;
         try
         {
